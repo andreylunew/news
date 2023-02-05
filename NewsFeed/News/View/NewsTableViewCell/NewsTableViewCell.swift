@@ -17,9 +17,11 @@ class NewsTableViewCell: UITableViewCell {
 	func configure(with news: NewsEntity) {
 		titleLabel.text = news.title
         let counterText = String(news.viewsCounter)
+        let image = UIImage(data: news.image!)
 		countLabel.text = counterText
 		countLabel.layer.cornerRadius = countLabel.bounds.height / 2
 		countLabel.layer.masksToBounds = true
+        
 	}
     
 }

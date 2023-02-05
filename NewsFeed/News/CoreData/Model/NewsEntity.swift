@@ -7,6 +7,7 @@
 
 import Foundation
 import CoreData
+import UIKit
 
 extension NewsEntity {
 	static func createNew(from dictionary: [String: AnyObject]) -> NewsEntity? {
@@ -19,7 +20,7 @@ extension NewsEntity {
 			let date = dictionary["publishedAt"] as? String
 			//let text = dictionary["text"] as? String
 			else { return nil }
-		
+        
 		guard CoreDataStack.shared.fetch(NewsEntity.self, title: title) == nil else { return nil }
 		
 		let context = CoreDataStack.shared.getContext()
@@ -30,7 +31,16 @@ extension NewsEntity {
 		newsEntity.urlSlug = urlSlug
         newsEntity.urlImg = urlImg
 		newsEntity.date = date
-		return newsEntity
+        
+        NetworkManager.shared.saveImage(urlImg: urlImg) { image in
+            guard let image = image else {
+                print("Failed to download image")
+                return
+            }
+            newsEntity.image = image.jpegData(compressionQuality: 1.0)
+        }
+        return newsEntity
 		
 	}
+    
 }

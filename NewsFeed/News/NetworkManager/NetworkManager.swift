@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 
 	struct PaginationSettings {
@@ -65,6 +66,24 @@ class NetworkManager {
 		}
 		task.resume()
 	}
+
+    func saveImage(urlImg: String, completion: @escaping (UIImage?) -> Void) {
+        guard let url = URL(string: urlImg) else { return }
+        let task = URLSession.shared.dataTask(with: url) { data, response, error in
+            if let error = error {
+                print(error.localizedDescription)
+                completion(nil)
+                return
+            }
+            guard let data = data, let image = UIImage(data: data) else {
+                completion(nil)
+                return
+            }
+            completion(image)
+        }
+        task.resume()
+    }
+    
 	
 	func getNewsContent(urlSlug: String, completion: @escaping (Result<String>) -> ()) {
         DispatchQueue.main.async {
